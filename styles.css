@@ -38,7 +38,7 @@ button {
 }
 
 .game {
-  width: min(100%, 430px);
+  width: min(100%, 460px);
   padding: 28px;
   background: var(--panel);
   border: 1px solid rgba(216, 205, 188, 0.85);
@@ -137,6 +137,107 @@ h1 {
   border-color: var(--accent);
 }
 
+.records {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.records__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.clear-button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+  color: var(--accent-dark);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.clear-button:hover {
+  color: var(--win);
+  border-color: var(--win);
+  transform: translateY(-1px);
+}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.score {
+  min-width: 0;
+  padding: 12px 8px;
+  text-align: center;
+  background: #f7efe3;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.score dt {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.score dd {
+  margin: 4px 0 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.history {
+  display: grid;
+  gap: 8px;
+  min-height: 40px;
+  max-height: 168px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.history__item,
+.history__empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 38px;
+  padding: 9px 10px;
+  color: var(--muted);
+  background: #fbf7ef;
+  border: 1px solid rgba(216, 205, 188, 0.75);
+  border-radius: 6px;
+  font-size: 0.92rem;
+}
+
+.history__result {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.history__time {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+}
+
 @media (max-width: 420px) {
   .app {
     padding: 14px;
@@ -152,6 +253,15 @@ h1 {
   }
 
   .reset-button {
+    width: 100%;
+  }
+
+  .records__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .clear-button {
     width: 100%;
   }
 }
