@@ -9,15 +9,17 @@
   <body>
     <main class="app" aria-labelledby="title">
       <section class="game">
+        <div class="celebration" id="celebration" aria-hidden="true"></div>
+
         <div class="game__header">
           <div>
             <p class="eyebrow">Tic Tac Toe</p>
             <h1 id="title">〇×ゲーム</h1>
           </div>
-          <button class="reset-button" id="resetButton" type="button">リセット</button>
+          <button class="reset-button" id="resetButton" type="button">次のゲーム</button>
         </div>
 
-        <p class="status" id="status" aria-live="polite">〇の番です</p>
+        <p class="status is-o-turn" id="status" aria-live="polite">67の番です（先攻）</p>
 
         <div class="board" id="board" role="grid" aria-label="〇×ゲームの盤面">
           <button class="cell" type="button" role="gridcell" aria-label="1行1列"></button>
@@ -39,11 +41,11 @@
 
           <dl class="scoreboard" aria-label="通算成績">
             <div class="score">
-              <dt>〇勝</dt>
+              <dt>67</dt>
               <dd id="circleWins">0</dd>
             </div>
             <div class="score">
-              <dt>×勝</dt>
+              <dt>トントントンサフール</dt>
               <dd id="crossWins">0</dd>
             </div>
             <div class="score">
