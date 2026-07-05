@@ -38,12 +38,32 @@ button {
 }
 
 .game {
+  position: relative;
+  overflow: hidden;
   width: min(100%, 460px);
   padding: 28px;
   background: var(--panel);
   border: 1px solid rgba(216, 205, 188, 0.85);
   border-radius: 8px;
   box-shadow: var(--shadow);
+}
+
+.game::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0;
+  background: radial-gradient(circle at 50% 24%, rgba(255, 214, 102, 0.32), transparent 38%);
+}
+
+.game.is-celebrating::after {
+  animation: victory-glow 900ms ease-out;
+}
+
+.game.is-draw::after {
+  background: radial-gradient(circle at 50% 24%, rgba(25, 114, 120, 0.2), transparent 38%);
+  animation: draw-glow 700ms ease-out;
 }
 
 .game__header {
@@ -94,11 +114,24 @@ h1 {
   font-weight: 700;
 }
 
+.status.is-result {
+  color: var(--ink);
+  animation: result-pop 520ms cubic-bezier(0.2, 0.9, 0.2, 1.2);
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   aspect-ratio: 1;
+}
+
+.board.is-celebrating {
+  animation: board-bounce 620ms ease-out;
+}
+
+.board.is-draw {
+  animation: board-wiggle 520ms ease-out;
 }
 
 .cell {
@@ -135,6 +168,28 @@ h1 {
   color: #fff;
   background: var(--accent);
   border-color: var(--accent);
+  animation: winning-cell 720ms ease-out;
+}
+
+.celebration {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti {
+  position: absolute;
+  top: -18px;
+  left: calc(var(--x) * 1%);
+  width: 8px;
+  height: 14px;
+  background: var(--color);
+  border-radius: 2px;
+  opacity: 0;
+  transform: rotate(var(--rotate));
+  animation: confetti-fall var(--duration) ease-out var(--delay) forwards;
 }
 
 .records {
@@ -238,6 +293,97 @@ h2 {
   font-size: 0.8rem;
 }
 
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0) rotate(var(--rotate));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 560px, 0) rotate(calc(var(--rotate) + 420deg));
+  }
+}
+
+@keyframes victory-glow {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+}
+
+@keyframes draw-glow {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes result-pop {
+  0% {
+    transform: scale(0.96);
+  }
+
+  55% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes board-bounce {
+  0% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.035);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes board-wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(1deg);
+  }
+
+  60% {
+    transform: rotate(-1deg);
+  }
+}
+
+@keyframes winning-cell {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 420px) {
   .app {
     padding: 14px;
@@ -263,5 +409,16 @@ h2 {
 
   .clear-button {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

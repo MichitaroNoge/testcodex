@@ -1,12 +1,16 @@
 const statusText = document.querySelector("#status");
 const resetButton = document.querySelector("#resetButton");
 const clearRecordsButton = document.querySelector("#clearRecordsButton");
+const gamePanel = document.querySelector(".game");
+const boardElement = document.querySelector("#board");
+const celebration = document.querySelector("#celebration");
 const circleWinsText = document.querySelector("#circleWins");
 const crossWinsText = document.querySelector("#crossWins");
 const drawsText = document.querySelector("#draws");
 const historyList = document.querySelector("#historyList");
 const cells = Array.from(document.querySelectorAll(".cell"));
 const recordsStorageKey = "ticTacToeRecords";
+const confettiColors = ["#197278", "#c44536", "#f4a261", "#2a9d8f", "#f6bd60"];
 
 const winningLines = [
   [0, 1, 2],
@@ -102,6 +106,49 @@ function addRecord(result) {
   renderRecords();
 }
 
+function clearCelebration() {
+  celebration.innerHTML = "";
+  gamePanel.classList.remove("is-celebrating", "is-draw");
+  boardElement.classList.remove("is-celebrating", "is-draw");
+  statusText.classList.remove("is-result");
+}
+
+function launchConfetti() {
+  celebration.innerHTML = "";
+
+  for (let index = 0; index < 34; index += 1) {
+    const piece = document.createElement("span");
+    piece.className = "confetti";
+    piece.style.setProperty("--x", Math.floor(Math.random() * 96) + 2);
+    piece.style.setProperty("--drift", `${Math.floor(Math.random() * 180) - 90}px`);
+    piece.style.setProperty("--rotate", `${Math.floor(Math.random() * 180)}deg`);
+    piece.style.setProperty("--delay", `${Math.random() * 0.18}s`);
+    piece.style.setProperty("--duration", `${0.9 + Math.random() * 0.55}s`);
+    piece.style.setProperty("--color", confettiColors[index % confettiColors.length]);
+    celebration.append(piece);
+  }
+}
+
+function celebrateResult(type) {
+  clearCelebration();
+  statusText.classList.add("is-result");
+
+  if (type === "win") {
+    gamePanel.classList.add("is-celebrating");
+    boardElement.classList.add("is-celebrating");
+    launchConfetti();
+  } else {
+    gamePanel.classList.add("is-draw");
+    boardElement.classList.add("is-draw");
+  }
+
+  window.setTimeout(() => {
+    celebration.innerHTML = "";
+    gamePanel.classList.remove("is-celebrating", "is-draw");
+    boardElement.classList.remove("is-celebrating", "is-draw");
+  }, 1700);
+}
+
 function getWinner() {
   for (const line of winningLines) {
     const [a, b, c] = line;
@@ -121,6 +168,7 @@ function updateStatus() {
     winner.line.forEach((index) => cells[index].classList.add("is-winning"));
     gameOver = true;
     addRecord(`${winner.player}の勝ち`);
+    celebrateResult("win");
     cells.forEach((cell) => {
       cell.disabled = true;
     });
@@ -131,6 +179,7 @@ function updateStatus() {
     statusText.textContent = "引き分けです";
     gameOver = true;
     addRecord("引き分け");
+    celebrateResult("draw");
     return;
   }
 
@@ -159,6 +208,7 @@ function resetGame() {
   currentPlayer = "〇";
   gameOver = false;
   statusText.textContent = "〇の番です";
+  clearCelebration();
 
   cells.forEach((cell) => {
     cell.textContent = "";
