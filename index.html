@@ -30,6 +30,30 @@
           <button class="cell" type="button" role="gridcell" aria-label="3行2列"></button>
           <button class="cell" type="button" role="gridcell" aria-label="3行3列"></button>
         </div>
+
+        <section class="records" aria-labelledby="recordsTitle">
+          <div class="records__header">
+            <h2 id="recordsTitle">戦績</h2>
+            <button class="clear-button" id="clearRecordsButton" type="button">戦績クリア</button>
+          </div>
+
+          <dl class="scoreboard" aria-label="通算成績">
+            <div class="score">
+              <dt>〇勝</dt>
+              <dd id="circleWins">0</dd>
+            </div>
+            <div class="score">
+              <dt>×勝</dt>
+              <dd id="crossWins">0</dd>
+            </div>
+            <div class="score">
+              <dt>引き分け</dt>
+              <dd id="draws">0</dd>
+            </div>
+          </dl>
+
+          <ol class="history" id="historyList" aria-label="過去の対戦履歴"></ol>
+        </section>
       </section>
     </main>
 
