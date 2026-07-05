@@ -10,7 +10,7 @@ const drawsText = document.querySelector("#draws");
 const historyList = document.querySelector("#historyList");
 const cells = Array.from(document.querySelectorAll(".cell"));
 const recordsStorageKey = "ticTacToeRecords";
-const confettiColors = ["#197278", "#c44536", "#f4a261", "#2a9d8f", "#f6bd60"];
+const confettiColors = ["#197278", "#9a6038", "#f4a261", "#2a9d8f", "#f6bd60"];
 
 const winningLines = [
   [0, 1, 2],
@@ -24,9 +24,21 @@ const winningLines = [
 ];
 
 let board = Array(9).fill("");
-let currentPlayer = "〇";
+let startingPlayer = "〇";
+let currentPlayer = startingPlayer;
 let gameOver = false;
 let records = loadRecords();
+
+function getPlayerName(player) {
+  return player === "〇" ? "67" : "トントントンサフール";
+}
+
+function showTurn() {
+  const turnOrder = currentPlayer === startingPlayer ? "先攻" : "後攻";
+  statusText.textContent = `${getPlayerName(currentPlayer)}の番です（${turnOrder}）`;
+  statusText.classList.toggle("is-o-turn", currentPlayer === "〇");
+  statusText.classList.toggle("is-x-turn", currentPlayer === "×");
+}
 
 function loadRecords() {
   const emptyRecords = {
@@ -113,10 +125,10 @@ function clearCelebration() {
   statusText.classList.remove("is-result");
 }
 
-function launchConfetti() {
+function launchConfetti(player) {
   celebration.innerHTML = "";
 
-  for (let index = 0; index < 34; index += 1) {
+  for (let index = 0; index < 58; index += 1) {
     const piece = document.createElement("span");
     piece.className = "confetti";
     piece.style.setProperty("--x", Math.floor(Math.random() * 96) + 2);
@@ -127,16 +139,34 @@ function launchConfetti() {
     piece.style.setProperty("--color", confettiColors[index % confettiColors.length]);
     celebration.append(piece);
   }
+
+  const playerClass = player === "〇" ? "is-o" : "is-x";
+  const hero = document.createElement("span");
+  hero.className = `cell victory-character victory-character--hero ${playerClass}`;
+  celebration.append(hero);
+
+  for (let index = 0; index < 12; index += 1) {
+    const character = document.createElement("span");
+    const angle = (Math.PI * 2 * index) / 12;
+    const distance = 170 + Math.random() * 90;
+
+    character.className = `cell victory-character ${playerClass}`;
+    character.style.setProperty("--fly-x", `${Math.cos(angle) * distance}px`);
+    character.style.setProperty("--fly-y", `${Math.sin(angle) * distance}px`);
+    character.style.setProperty("--fly-rotate", `${Math.floor(Math.random() * 360) - 180}deg`);
+    character.style.setProperty("--fly-delay", `${index * 0.035}s`);
+    celebration.append(character);
+  }
 }
 
-function celebrateResult(type) {
+function celebrateResult(type, player = "") {
   clearCelebration();
   statusText.classList.add("is-result");
 
   if (type === "win") {
     gamePanel.classList.add("is-celebrating");
     boardElement.classList.add("is-celebrating");
-    launchConfetti();
+    launchConfetti(player);
   } else {
     gamePanel.classList.add("is-draw");
     boardElement.classList.add("is-draw");
@@ -146,7 +176,7 @@ function celebrateResult(type) {
     celebration.innerHTML = "";
     gamePanel.classList.remove("is-celebrating", "is-draw");
     boardElement.classList.remove("is-celebrating", "is-draw");
-  }, 1700);
+  }, 2400);
 }
 
 function getWinner() {
@@ -164,11 +194,13 @@ function updateStatus() {
   const winner = getWinner();
 
   if (winner) {
-    statusText.textContent = `${winner.player}の勝ちです`;
+    statusText.textContent = `${getPlayerName(winner.player)}の勝ちです！`;
+    statusText.classList.toggle("is-o-turn", winner.player === "〇");
+    statusText.classList.toggle("is-x-turn", winner.player === "×");
     winner.line.forEach((index) => cells[index].classList.add("is-winning"));
     gameOver = true;
     addRecord(`${winner.player}の勝ち`);
-    celebrateResult("win");
+    celebrateResult("win", winner.player);
     cells.forEach((cell) => {
       cell.disabled = true;
     });
@@ -177,13 +209,14 @@ function updateStatus() {
 
   if (board.every(Boolean)) {
     statusText.textContent = "引き分けです";
+    statusText.classList.remove("is-o-turn", "is-x-turn");
     gameOver = true;
     addRecord("引き分け");
     celebrateResult("draw");
     return;
   }
 
-  statusText.textContent = `${currentPlayer}の番です`;
+  showTurn();
 }
 
 function handleCellClick(event) {
@@ -195,9 +228,11 @@ function handleCellClick(event) {
   }
 
   board[index] = currentPlayer;
-  cell.textContent = currentPlayer;
+  cell.textContent = "";
   cell.disabled = true;
+  cell.classList.toggle("is-o", currentPlayer === "〇");
   cell.classList.toggle("is-x", currentPlayer === "×");
+  cell.setAttribute("aria-label", `${cell.getAttribute("aria-label")} ${currentPlayer}`);
   currentPlayer = currentPlayer === "〇" ? "×" : "〇";
 
   updateStatus();
@@ -205,15 +240,17 @@ function handleCellClick(event) {
 
 function resetGame() {
   board = Array(9).fill("");
-  currentPlayer = "〇";
+  startingPlayer = startingPlayer === "〇" ? "×" : "〇";
+  currentPlayer = startingPlayer;
   gameOver = false;
-  statusText.textContent = "〇の番です";
   clearCelebration();
+  showTurn();
 
   cells.forEach((cell) => {
     cell.textContent = "";
     cell.disabled = false;
-    cell.classList.remove("is-x", "is-winning");
+    cell.classList.remove("is-o", "is-x", "is-winning");
+    cell.setAttribute("aria-label", cell.getAttribute("aria-label").replace(/ [〇×]$/, ""));
   });
 }
 
