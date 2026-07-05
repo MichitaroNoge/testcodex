@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>〇×ゲーム</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app" aria-labelledby="title">
+      <section class="game">
+        <div class="game__header">
+          <div>
+            <p class="eyebrow">Tic Tac Toe</p>
+            <h1 id="title">〇×ゲーム</h1>
+          </div>
+          <button class="reset-button" id="resetButton" type="button">リセット</button>
+        </div>
+
+        <p class="status" id="status" aria-live="polite">〇の番です</p>
+
+        <div class="board" id="board" role="grid" aria-label="〇×ゲームの盤面">
+          <button class="cell" type="button" role="gridcell" aria-label="1行1列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="1行2列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="1行3列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="2行1列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="2行2列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="2行3列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="3行1列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="3行2列"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="3行3列"></button>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
